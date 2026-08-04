@@ -196,6 +196,137 @@ def plot_player_info(player_info):
     plt.savefig("/Users/sidharthshyam/nba-breakout-project/figures/player_draft_number_distribution.png")
     plt.close()
 
+def create_merged_dataset(traditional, advanced, player_info):
+    """
+    Merges the traditional, advanced, and player information datasets.
+    Each row in the result represents one player in one NBA season.
+    """
+    # Keep only the traditional-stat columns needed for the project
+    traditional_selected = traditional[
+        [
+            "PLAYER_ID",
+            "PLAYER_NAME",
+            "SEASON",
+            "MIN",
+            "PTS"
+        ]
+    ]
+
+    # Keep only the advanced-stat columns needed for the project
+    advanced_selected = advanced[
+        [
+            "PLAYER_ID",
+            "AGE",
+            "SEASON",
+            "USG_PCT",
+            "TS_PCT",
+            "AST_PCT",
+            "REB_PCT",
+            "DEF_RATING",
+            "PIE"
+        ]
+    ]
+
+    # Keep only the player-information columns needed for the project
+    player_info_selected = player_info[
+        [
+            "PERSON_ID",
+            "POSITION",
+            "HEIGHT",
+            "WEIGHT",
+            "DRAFT_YEAR",
+            "DRAFT_ROUND",
+            "DRAFT_NUMBER",
+            "FROM_YEAR"
+        ]
+    ]
+
+    # Merge the traditional and advanced statistics.
+    # Only player-seasons found in both datasets are retained.
+    merged_stats = traditional_selected.merge(
+        advanced_selected,
+        left_on=["PLAYER_ID", "SEASON"],
+        right_on=["PLAYER_ID", "SEASON"],
+        how="inner"
+    )
+
+    # Add player background information.
+    # Keep all player-seasons even if player information is missing.
+    merged = merged_stats.merge(
+        player_info_selected,
+        left_on="PLAYER_ID",
+        right_on="PERSON_ID",
+        how="left"
+    )
+
+    # Calculate scoring production per 36 minutes
+    merged = merged[merged["MIN"] > 0].copy()
+    merged["PTS_PER_36"] = (
+        merged["PTS"] / merged["MIN"] * 36
+    )
+
+    return merged
+
+def draft_group(draft_number):
+    """
+    Categorizes the draft pick of each player. 
+    """
+    if pd.isna(draft_number):
+        return "Undrafted"
+    elif draft_number <= 5:
+        return "Top 5"
+    elif draft_number <= 14:
+        return "Lottery"
+    elif draft_number <= 30:
+        return "1st Round"
+    else:
+        return "2nd Round"
+
+def plot_draft_group_performance(merged):
+    """
+    Creates a grouped bar chart comparing average performance metrics
+    across draft groups.
+    """
+    merged["DRAFT_GROUP"] = merged["DRAFT_NUMBER"].apply(draft_group)
+
+    performance = merged.groupby("DRAFT_GROUP")["PIE"].mean()
+
+    performance.plot(kind="bar")
+
+    plt.title("Average Performance by Draft Group")
+    plt.xlabel("Draft Group")
+    plt.ylabel("Average PIE")
+    plt.legend(title="Metric")
+    plt.tight_layout()
+
+    plt.savefig("/Users/sidharthshyam/nba-breakout-project/figures/draft_group_pie.png")
+    plt.show()
+
+def plot_age_vs_pie(merged):
+    """
+    Creates a boxplot showing Player Impact Estimate
+    across player ages.
+    """
+
+    plt.figure(figsize=(12, 6))
+
+    sns.boxplot(
+        data=merged,
+        x="AGE",
+        y="PIE"
+    )
+
+    plt.title("Player Impact Estimate by Age")
+    plt.xlabel("Age")
+    plt.ylabel("Player Impact Estimate (PIE)")
+
+    plt.tight_layout()
+
+    plt.savefig("/Users/sidharthshyam/nba-breakout-project/figures/age_vs_pie.png")
+    plt.show()
+
+
+
 def main():
     traditional, advanced, usage, player_info = load_data()
 
@@ -203,17 +334,25 @@ def main():
     advanced = filter_seasons(advanced, 1999)
     usage = filter_seasons(usage, 1999)
 
+    merged = create_merged_dataset(
+        traditional,
+        advanced,
+        player_info
+    )
+
     print("\nDATASET SIZES")
     print_dataset_size("Traditional stats", traditional)
     print_dataset_size("Advanced stats", advanced)
     print_dataset_size("Usage stats", usage)
     print_dataset_size("Player info", player_info)
+    print_dataset_size("Traditional-Advanced-Player Stats", merged)
 
     print("\nMISSING VALUES")
     print_missing_values("TRADITIONAL", traditional)
     print_missing_values("ADVANCED", advanced)
     print_missing_values("USAGE", usage)
     print_missing_values("PLAYER INFO", player_info)
+    print_missing_values("Traditional-Advanced-Player Stats", merged)
 
     traditional = traditional[traditional["MIN"] > 0].copy()
     traditional["PTS_PER_36"] = (
@@ -249,10 +388,12 @@ def main():
     print("\nPLAYER POSITION COUNTS")
     print(player_info["POSITION"].value_counts(dropna=False))
 
-    plot_traditional_data(traditional)
-    plot_advanced_data(advanced)
-    plot_usage_data(usage)
-    plot_player_info(player_info)
+    #plot_traditional_data(traditional)
+    #plot_advanced_data(advanced)
+    #plot_usage_data(usage)
+    #plot_player_info(player_info)
+    plot_draft_group_performance(merged)
+    plot_age_vs_pie(merged)
 
 
 if __name__ == "__main__":
