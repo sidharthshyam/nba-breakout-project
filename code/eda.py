@@ -159,7 +159,7 @@ def plot_usage_data(usage):
 
     # Plot 2: Average usage rate by season
     average_usage = (
-        usage.groupby("SEASON", as_index=False)["USG_PCT"].mean()
+        usage.groupby("SEASON")["USG_PCT"].mean()
     )
     sns.lineplot(
         data=average_usage,

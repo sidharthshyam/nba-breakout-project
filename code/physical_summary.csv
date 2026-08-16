@@ -1,0 +1,4 @@
+SUSTAINABILITY_RESULT,COUNT,HEIGHT_INCHES,WEIGHT
+Improved further,172,79.0,225.0
+Regressed,387,79.0,220.0
+Sustained at least 80%,101,79.0,218.0
