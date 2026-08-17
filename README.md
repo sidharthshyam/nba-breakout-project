@@ -18,11 +18,11 @@ the `data/raw` directory.
 
 ## Submitted Python files
 
-- `code/ba.py`: Loads and merges the season-level statistics, creates
+- `code/ba.py`: Breakout Analysis(ba) file. Loads and merges the season-level statistics, creates
   consecutive player-season pairs, calculates year-over-year changes and
   within-season percentile ranks, identifies breakout seasons, and saves the
   breakout-season dataset.
-- `code/sa.py`: Performs the sustainability analysis for all three research
+- `code/sa.py`: Sustainability Analysis(sa) file. Performs the sustainability analysis for all three research
   questions. It adds following-season statistics, calculates retention,
   classifies sustainability, summarizes breakout dimensions and profiles,
   adds player characteristics, produces figures, and saves the final result
