@@ -2,7 +2,7 @@
 
 import numpy as np
 import pandas as pd
-
+import plotly.express as px
 import ba
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -518,10 +518,40 @@ def plot_visualizations(
 
     plt.close()
 
+    interactive_figure = px.bar(
+        profile_summary,
+        x="SUSTAINABILITY_RATE",
+        y="BREAKOUT_PROFILE",
+        orientation="h",
+        text="SUSTAINABILITY_RATE",
+        hover_data=["COUNT", "MEDIAN_RETENTION"],
+        title="Sustainability Rate by Breakout Profile",
+        labels={
+            "SUSTAINABILITY_RATE": "Sustained or Improved (%)",
+            "BREAKOUT_PROFILE": "Breakout Profile",
+            "COUNT": "Number of Breakouts",
+            "MEDIAN_RETENTION": "Median Retention",
+        },
+    )
+
+    interactive_figure.update_traces(
+        texttemplate="%{text:.1f}%",
+        textposition="outside",
+    )
+
+    interactive_figure.update_layout(
+        yaxis={"categoryorder": "total ascending"},
+    )
+
+    interactive_figure.write_html(
+        "/Users/sidharthshyam/nba-breakout-project/figures/"
+        "interactive_sustainability_by_profile.html"
+    )
+
 
 def main() -> None:
     """Run the complete breakout sustainability analysis."""
-    stats = ba.load_and_merge(ba.DEFAULT_DATA_DIR)
+    stats = ba.load_and_merge()
 
     pairs, performance_metrics = ba.find_breakouts(
         stats,

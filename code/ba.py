@@ -1,23 +1,23 @@
 """Simple NBA breakout-season finder."""
 
-from pathlib import Path
 import pandas as pd
 
-
-DEFAULT_DATA_DIR = Path("/Users/sidharthshyam/nba-breakout-project/data/raw")
 
 MINUTE_CUTOFF = 500
 PERCENTILE_THRESHOLD = 0.85
 MIN_DIMENSIONS = 2
 
 
-def load_and_merge(data_dir: Path) -> pd.DataFrame:
+def load_and_merge() -> pd.DataFrame:
     """Load the three season-level CSV files
       and merge them by player
       and season."""
-    advanced = pd.read_csv(data_dir / "player_stats_advanced_rs.csv")
-    traditional = pd.read_csv(data_dir / "player_stats_traditionnal_rs.csv")
-    usage = pd.read_csv(data_dir / "player_stats_usage_rs.csv")
+    advanced = pd.read_csv("/Users/sidharthshyam/nba-breakout-project/data/"
+                           "raw/player_stats_advanced_rs.csv")
+    traditional = pd.read_csv("/Users/sidharthshyam/nba-breakout-project/data"
+                              "/raw/player_stats_traditionnal_rs.csv")
+    usage = pd.read_csv("/Users/sidharthshyam/nba-breakout-project/data/raw/"
+                        "player_stats_usage_rs.csv")
 
     keys = ["PLAYER_ID", "SEASON"]
 
@@ -109,7 +109,7 @@ def find_breakouts(
 
 def main() -> None:
     """Run the breakout analysis, display a summary, and save the results."""
-    stats = load_and_merge(DEFAULT_DATA_DIR)
+    stats = load_and_merge()
 
     pairs, performance_metrics = find_breakouts(
         stats,
@@ -150,7 +150,7 @@ def main() -> None:
         ascending=[True, False, True],
     )
 
-    output_path = Path("nba_breakout_seasons.csv")
+    output_path = "nba_breakout_seasons.csv"
     breakouts.to_csv(output_path, index=False)
 
     print(f"Eligible player-season pairs: {len(pairs)}")
@@ -159,7 +159,7 @@ def main() -> None:
     print(f"Percentile threshold: {PERCENTILE_THRESHOLD:.0%}")
     print(f"Required dimensions: {MIN_DIMENSIONS}")
     print(f"Metrics used: {', '.join(performance_metrics)}")
-    print(f"Results saved to: {output_path.resolve()}")
+    print(f"Results saved to: {output_path}")
 
     if not breakouts.empty:
         print("\nFirst 20 breakout seasons:")
