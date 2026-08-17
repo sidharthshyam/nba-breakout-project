@@ -98,9 +98,7 @@ static figures and the interactive Plotly file in the `figures` directory.
 To view the interactive Plotly visualization, open the following file in a web
 browser rather than a text editor:
 
-```text
 figures/interactive_sustainability_by_profile.html
-```
 
 ## How to run the tests
 
