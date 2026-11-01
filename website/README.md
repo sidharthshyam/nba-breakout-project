@@ -125,8 +125,8 @@ missing optional context. Tests do not overwrite CSV files.
 | `components/styles.py` | Theme, headings, resource links, chart display |
 | `test_website.py` | Data integrity and Streamlit interaction tests |
 
-Other editable files: `assets/about.md` (bio/contact), `assets/feedback.md`
-(actual feedback history), `.streamlit/config.toml` (theme), `requirements.txt`
+Other editable files: `assets/about.md` (author motivation), `assets/feedback.md`
+(feedback status), `.streamlit/config.toml` (theme), `requirements.txt`
 (tested runtime versions), and `DATA_AUDIT.md` (source verification).
 The editorial theme uses Streamlit's bundled Source Sans and Source Code fonts,
 Georgia for headings, a cream background, charcoal text, and one brick-red
