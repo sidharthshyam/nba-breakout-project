@@ -132,25 +132,19 @@ The editorial theme uses Streamlit's bundled Source Sans and Source Code fonts,
 Georgia for headings, a cream background, charcoal text, and one brick-red
 accent. It does not require a third-party font service.
 
-## Deploy later with Streamlit Community Cloud
+## Public website and updates
 
-No public deployment is performed by these instructions automatically.
+The public app is [nba-breakout-lab.streamlit.app](https://nba-breakout-lab.streamlit.app/).
+It runs from the `main` branch of this repository with `website/app.py` as its
+entrypoint and Python 3.12 as its runtime.
 
-1. Review the author/contact placeholders, paper, data license, and any research
-   changes. Include only material you intend to make public.
-2. Commit and push the website plus all required research outputs, including
-   `code/robustness_outputs/`, to your GitHub repository. Do not commit `.venv`,
-   caches, secrets, or local test screenshots. The robustness outputs may currently
-   be untracked, so make sure they are included.
-3. In [Streamlit Community Cloud](https://share.streamlit.io/), create an app for
-   that repository and branch. Set the entrypoint to `website/app.py`.
-4. In advanced settings, choose Python 3.12. Community Cloud should find
-   `website/requirements.txt` next to the entrypoint.
-5. Community Cloud runs from the repository root. The matching theme is already
-   included at `.streamlit/config.toml` in the repository root; push that file
-   along with the website.
-6. Deploy when ready, then test all navigation routes, downloads, player filters,
-   and definition controls on the hosted URL.
+To update it, review the changed content for public release, then commit and
+push the website and any changed research outputs. Streamlit Community Cloud
+redeploys from GitHub. Do not commit `.venv`, caches, secrets, or local test
+screenshots. The runtime dependencies are in `website/requirements.txt`; the
+hosted theme is configured by the repository-root `.streamlit/config.toml`.
+After an update, check the homepage, navigation, downloads, player filters, and
+definition controls at the public URL.
 
 Official references: [multipage navigation](https://docs.streamlit.io/develop/api-reference/navigation/st.navigation),
 [AppTest](https://docs.streamlit.io/develop/api-reference/app-testing),
